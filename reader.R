@@ -1,5 +1,22 @@
 library(foreign)
 
+CalculateWeights <- function(values) {
+    # Calculate weights of a list of values, which the sum of weights will be
+    # one.
+    #
+    # Args:
+    #   values: List of values.
+    #
+    # Returns:
+    #   The list of weights.
+    dvalues <- as.double(values)
+    dvalues[is.na(dvalues)] <- 0.0
+    dvalues.sum <- sum(dvalues)
+    weights <- dvalues / dvalues.sum
+
+    return(weights)
+}
+
 ReadFamilyData <- function(path) {
     # Read the survey data of family income and expenditure from a file.
     # Currently, the function only supports ".sav" (SPSS) and ".dta" (Stata)
@@ -19,68 +36,49 @@ ReadFamilyData <- function(path) {
         stop("The file format is not supported: \"", path ,"\"")
     }
 
-    families <- list()
-    for (idx in 1:length(data$id)) {
-        data$Get <- function(key) {
-            return(data[[key]][idx])
-        }
-        data$GetItem <- function(item.num) {
-            key <- paste("itm", item.num, sep="")
-            value <- data$Get(key)
-            value <- if (is.na(value)) 0 else value
-
-            return(value)
-        }
-
-        id <- data$Get("id")
-        population <- list(
-            total = data$Get("a8"),
-            worker = data$Get("a9"),
-            adult = data$Get("a12"),
-            elder = data$Get("a19")
-        )
-        type <- data$Get("a18")
-        total.income <- data$GetItem("500")
-        apportion.base <- list(
-            tax = list(
-                individual.income = data$GetItem("610"),
-                house.land.value = data$GetItem("590")
-            ),
+    families <- list(
+        id = data$id,
+        population = list(
+            total = data$a8,
+            worker = data$a9,
+            adult = data$a12,
+            elder = data$a19
+        ),
+        type = data$a18,
+        total.income = data$itm500,
+        apportion.tax = list(
+            individual.income = data$itm610,
+            house.land.value = data$itm590
+        ),
+        apportion.weights = list(
             income = list(
-                distributed.factor = data$GetItem("190")
-                                     + data$GetItem("240")
-                                     + data$GetItem("330")
-                                     - data$GetItem("540"),
-                investment = data$GetItem("350"),
-                business.net = data$GetItem("290"),
+                distributed.factor = CalculateWeights(
+                    data$itm190
+                    + data$itm240
+                    + data$itm330
+                    - data$itm540
+                ),
+                investment = CalculateWeights(data$itm350),
+                business.net = CalculateWeights(data$itm290),
                 # TODO(JiaKuan Su): Property income may be item 330 or 360.
-                property = data$GetItem("360"),
-                employee = data$GetItem("190")
+                property = CalculateWeights(data$itm360),
+                employee = CalculateWeights(data$itm190)
             ),
             expenditure = list(
-                recurring = data$GetItem("600")
-                            + data$GetItem("1000"),
-                consumption = data$GetItem("1000"),
-                transportaion.communication.tools = data$GetItem("1111")
-                                                    + data$GetItem("1131"),
-                take.transportaion = data$GetItem("1113"),
-                entertainment.culture.services = data$GetItem("1152"),
-                tobacco = data$GetItem("1021"),
-                alcoholic = data$GetItem("1022")
+                recurring = CalculateWeights(data$itm600 + data$itm1000),
+                consumption = CalculateWeights(data$itm1000),
+                transportaion.communication.tools = CalculateWeights(
+                    data$itm1111
+                    + data$itm1131
+                ),
+                take.transportaion = CalculateWeights(data$itm1113),
+                entertainment.culture.services = CalculateWeights(data$itm1152),
+                tobacco = CalculateWeights(data$itm1021),
+                alcoholic = CalculateWeights(data$itm1022)
             ),
-            savings = data$GetItem("400")
-                      - data$GetItem("600")
-                      - data$GetItem("1000")
+            savings = CalculateWeights(data$itm400 + data$itm600 + data$itm1000)
         )
-
-        families[[idx]] <- list(
-            id = id,
-            population = population,
-            type = type,
-            total.income = total.income,
-            apportion.base = apportion.base
-        )
-    }
+    )
 
     return(families)
 }
