@@ -1,5 +1,8 @@
 source("reader.R")
 
+# Path to the location of file that contains the total amount of each tax.
+kTaxTotalsPath = './static/tax_totals.csv'
+# The supported year (of R.O.C.) for microsimulation.
 kSupportedYears = c(104)
 
 main <- function(year, input.path) {
@@ -7,7 +10,9 @@ main <- function(year, input.path) {
         stop("Year \"", year, "\" is not in supprted list: [",
              paste(kSupportedYears, collapse = ","), "]")
     }
+
     families <- ReadFamilyData(input.path)
+    tax.totals <- ReadTaxTotals(kTaxTotalsPath, year)
 }
 
 if(!interactive()) {

@@ -82,3 +82,48 @@ ReadFamilyData <- function(path) {
 
     return(families)
 }
+
+ReadTaxTotals <- function(path, year) {
+    data <- read.csv(path)
+
+    # Find the row index for the given year.
+    year.idx <- match(year, data[[1]])
+
+    # Help function to get total value of a tax item.
+    GetTaxTotal <- function(tax.idx) {
+        return(data[[tax.idx]][year.idx])
+    }
+
+    tax.totals <- list(
+        # 綜合所得稅
+        individual.income <- GetTaxTotal(2),
+        # 營利事業所得稅
+        enterprise.income <- GetTaxTotal(3),
+        # 土地增值稅
+        land.value.increment  <- GetTaxTotal(4),
+        # 營業稅
+        sales <- GetTaxTotal(5),
+        # 印花稅
+        stamp <- GetTaxTotal(6),
+        # 使用牌照稅
+        vehicle.license <- GetTaxTotal(7),
+        # 娛樂稅
+        amusement <- GetTaxTotal(8),
+        # 房屋稅與地價稅
+        house.land.value <- GetTaxTotal(9),
+        # 遺產及贈與稅
+        estate.gift <- GetTaxTotal(10),
+        # 契稅
+        deed <- GetTaxTotal(11),
+        # 證券交易稅
+        securities.exchange <- GetTaxTotal(12),
+        # 菸酒稅
+        alcohol.tobacco <- GetTaxTotal(13),
+        # 貨物稅
+        commodity <- GetTaxTotal(14),
+        # 關稅
+        tariff <- GetTaxTotal(15)
+    )
+
+    return(tax.totals)
+}
