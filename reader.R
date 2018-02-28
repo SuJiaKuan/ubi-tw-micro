@@ -127,3 +127,14 @@ ReadTaxTotals <- function(path, year) {
 
     return(tax.totals)
 }
+
+ReadHouseholdTotals <- function(path, year) {
+    data <- read.csv(path)
+
+    # Find the row index for the given year.
+    year.idx <- match(year, data[[1]])
+
+    household.totals <- data[[2]][year.idx]
+
+    return(household.totals)
+}

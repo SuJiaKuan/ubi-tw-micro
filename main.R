@@ -2,6 +2,8 @@ source("reader.R")
 
 # Path to the location of file that contains the total amount of each tax.
 kTaxTotalsPath = './static/tax_totals.csv'
+# Path to the location of file that contains the statistics of Taiwan household.
+kHouseholdsStatisticsPath = './static/households.csv'
 # The supported year (of R.O.C.) for microsimulation.
 kSupportedYears = c(104)
 
@@ -13,6 +15,7 @@ main <- function(year, input.path) {
 
     families <- ReadFamilyData(input.path)
     tax.totals <- ReadTaxTotals(kTaxTotalsPath, year)
+    household.totals <- ReadHouseholdTotals(kHouseholdsStatisticsPath, year)
 }
 
 if(!interactive()) {
