@@ -84,6 +84,14 @@ ReadFamilyData <- function(path) {
 }
 
 ReadTaxTotals <- function(path, year) {
+    # Read the total income amount of each tax for a given year.
+    #
+    # Args:
+    #   path: The path to the data.
+    #   year: The given year.
+    #
+    # Returns:
+    #   Total income amount of each tax.
     data <- read.csv(path)
 
     # Find the row index for the given year.
@@ -129,6 +137,14 @@ ReadTaxTotals <- function(path, year) {
 }
 
 ReadHouseholdTotals <- function(path, year) {
+    # Read the total number of households for a given year.
+    #
+    # Args:
+    #   path: The path to the data.
+    #   year: The given year.
+    #
+    # Returns:
+    #   Total number of households.
     data <- read.csv(path)
 
     # Find the row index for the given year.
