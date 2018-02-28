@@ -137,33 +137,33 @@ ReadTaxTotals <- function(path, year) {
 
     tax.totals <- list(
         # 綜合所得稅
-        individual.income <- GetTaxTotal(2),
+        individual.income = GetTaxTotal(2),
         # 營利事業所得稅
-        enterprise.income <- GetTaxTotal(3),
+        enterprise.income = GetTaxTotal(3),
         # 土地增值稅
-        land.value.increment  <- GetTaxTotal(4),
+        land.value.increment = GetTaxTotal(4),
         # 營業稅
-        sales <- GetTaxTotal(5),
+        sales = GetTaxTotal(5),
         # 印花稅
-        stamp <- GetTaxTotal(6),
+        stamp = GetTaxTotal(6),
         # 使用牌照稅
-        vehicle.license <- GetTaxTotal(7),
+        vehicle.license = GetTaxTotal(7),
         # 娛樂稅
-        amusement <- GetTaxTotal(8),
+        amusement = GetTaxTotal(8),
         # 房屋稅與地價稅
-        house.land.value <- GetTaxTotal(9),
+        house.land.value = GetTaxTotal(9),
         # 遺產及贈與稅
-        estate.gift <- GetTaxTotal(10),
+        estate.gift =  GetTaxTotal(10),
         # 契稅
-        deed <- GetTaxTotal(11),
+        deed = GetTaxTotal(11),
         # 證券交易稅
-        securities.exchange <- GetTaxTotal(12),
+        securities.exchange = GetTaxTotal(12),
         # 菸酒稅
-        alcohol.tobacco <- GetTaxTotal(13),
+        alcohol.tobacco = GetTaxTotal(13),
         # 貨物稅
-        commodity <- GetTaxTotal(14),
+        commodity = GetTaxTotal(14),
         # 關稅
-        tariff <- GetTaxTotal(15)
+        tariff = GetTaxTotal(15)
     )
 
     return(tax.totals)
