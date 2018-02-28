@@ -10,7 +10,6 @@ CalculateWeights <- function(values) {
     # Returns:
     #   The list of weights.
     dvalues <- as.double(values)
-    dvalues[is.na(dvalues)] <- 0.0
     dvalues.sum <- sum(dvalues)
     weights <- dvalues / dvalues.sum
 
@@ -36,7 +35,17 @@ ReadFamilyData <- function(path) {
         stop("The file format is not supported: \"", path ,"\"")
     }
 
+    # Help function to get an item from the data.
+    data$GetItem <- function(idx) {
+        name <- paste("itm", idx, sep = "")
+        item <- data[[name]]
+        item[is.na(item)] <- 0
+
+        return(item)
+    }
+
     families <- list(
+        samples.size = length(data$id),
         id = data$id,
         population = list(
             total = data$a8,
@@ -45,38 +54,61 @@ ReadFamilyData <- function(path) {
             elder = data$a19
         ),
         type = data$a18,
-        total.income = data$itm500,
+        total.income = data$GetItem(500),
         apportion.tax = list(
-            individual.income = data$itm610,
-            house.land.value = data$itm590
+            # 綜合所得稅支出
+            individual.income = data$GetItem(610),
+            # 房屋稅與地價稅支出
+            house.land.value = data$GetItem(590)
         ),
         apportion.weights = list(
             income = list(
+                # 已分配要素所得
                 distributed.factor = CalculateWeights(
-                    data$itm190
-                    + data$itm240
-                    + data$itm330
-                    - data$itm540
+                    data$GetItem(190)
+                    + data$GetItem(240)
+                    + data$GetItem(330)
+                    - data$GetItem(540)
                 ),
-                investment = CalculateWeights(data$itm350),
-                business.net = CalculateWeights(data$itm290),
+                # 投資收入
+                investment = CalculateWeights(data$GetItem(350)),
+                # 營業淨收入
+                business.net = CalculateWeights(data$GetItem(290)),
+                # 財產收入
                 # TODO(JiaKuan Su): Property income may be item 330 or 360.
-                property = CalculateWeights(data$itm360),
-                employee = CalculateWeights(data$itm190)
+                property = CalculateWeights(data$GetItem(360)),
+                # 受雇人員報酬
+                employee = CalculateWeights(data$GetItem(190))
             ),
             expenditure = list(
-                recurring = CalculateWeights(data$itm600 + data$itm1000),
-                consumption = CalculateWeights(data$itm1000),
-                transportaion.communication.tools = CalculateWeights(
-                    data$itm1111
-                    + data$itm1131
+                # 經常性支出
+                recurring = CalculateWeights(
+                    data$GetItem(600)
+                    + data$GetItem(1000)
                 ),
-                take.transportaion = CalculateWeights(data$itm1113),
-                entertainment.culture.services = CalculateWeights(data$itm1152),
-                tobacco = CalculateWeights(data$itm1021),
-                alcoholic = CalculateWeights(data$itm1022)
+                # 消費支出
+                consumption = CalculateWeights(data$GetItem(1000)),
+                # 個人交通通訊工具之購置費用
+                transportaion.communication.tools = CalculateWeights(
+                    data$GetItem(1111)
+                    + data$GetItem(1131)
+                ),
+                # 搭乘交通設備之費用
+                take.transportaion = CalculateWeights(data$GetItem(1113)),
+                # 娛樂消遣服務支出
+                entertainment.culture.services = CalculateWeights(
+                    data$GetItem(1152)
+                ),
+                # 菸草支出
+                tobacco = CalculateWeights(data$GetItem(1021)),
+                # 酒精支出
+                alcoholic = CalculateWeights(data$GetItem(1022))
             ),
-            savings = CalculateWeights(data$itm400 + data$itm600 + data$itm1000)
+            savings = CalculateWeights(
+                data$GetItem(400)
+                + data$GetItem(600)
+                + data$GetItem(1000)
+            )
         )
     )
 
@@ -91,7 +123,8 @@ ReadTaxTotals <- function(path, year) {
     #   year: The given year.
     #
     # Returns:
-    #   Total income amount of each tax.
+    #   Total income amount of each tax. The unit of each tax income amount is
+    #   million.
     data <- read.csv(path)
 
     # Find the row index for the given year.
