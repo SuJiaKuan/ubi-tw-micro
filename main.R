@@ -1,6 +1,7 @@
 source("reader.R")
 source("apportion.R")
 source("incomes.R")
+source("summary.R")
 
 # Path to the location of file that contains the total amount of each tax.
 kTaxTotalsPath = './static/tax_totals.csv'
@@ -42,6 +43,9 @@ main <- function(year, input.path, apportion.hypothesis = "A") {
     # Calculate after tax incomes.
     after.tax.incomes <- CalculateAfterTaxIncomes(adjusted.incomes,
                                                   apportion.amounts)
+
+    print(paste("Gini coefficient before tax:", Gini(adjusted.incomes)))
+    print(paste("Gini coefficient after tax:", Gini(after.tax.incomes)))
 }
 
 if(!interactive()) {
