@@ -1,5 +1,8 @@
 library(foreign)
 
+# The number of groups.
+kNumGroups = 10
+
 CalculateWeights <- function(values) {
     # Calculate weights of a list of values, which the sum of weights will be
     # one.
@@ -14,6 +17,32 @@ CalculateWeights <- function(values) {
     weights <- dvalues / dvalues.sum
 
     return(weights)
+}
+
+CalculateTopGroupPropertyWeights <- function(total.income, property.income) {
+    # Calculate the weights of property income in group who have top total
+    # income. The sum of weights will be one.
+    #
+    # Args:
+    #   total.income: List of total incomes.
+    #   perperty.income: List of perperty incomes.
+    #
+    # Returns:
+    #   The list of weights of top group.
+
+    # Get the indexse of families excluding the top group.
+    skip.num <- as.integer((1 - (1 / kNumGroups)) * length(total.income))
+    sorted.total.income.indexes <- sort(total.income, index.return = TRUE)$ix
+    skip.indexes <- head(sorted.total.income.indexes, skip.num)
+
+    # Get the property incomes of the top group.
+    top.group.property.income <- property.income
+    top.group.property.income[skip.indexes] <- 0
+
+    # Calculate the weights of property income in the top group.
+    top.group.property.weights <- CalculateWeights(top.group.property.income)
+
+    return(top.group.property.weights)
 }
 
 ReadFamilyData <- function(path) {
@@ -55,7 +84,7 @@ ReadFamilyData <- function(path) {
         ),
         type = data$a18,
         total.income = data$GetItem(500),
-        apportion.tax = list(
+        tax = list(
             # 綜合所得稅支出
             individual.income = data$GetItem(610),
             # 房屋稅與地價稅支出
@@ -74,9 +103,20 @@ ReadFamilyData <- function(path) {
                 investment = CalculateWeights(data$GetItem(350)),
                 # 營業淨收入
                 business.net = CalculateWeights(data$GetItem(290)),
+                # 投資收入與營業淨收入
+                investment.business.net = CalculateWeights(
+                    data$GetItem(350)
+                    + data$GetItem(290)
+                ),
                 # 財產收入
                 # TODO(JiaKuan Su): Property income may be item 330 or 360.
                 property = CalculateWeights(data$GetItem(360)),
+                # 最高所得組之財產收入
+                # TODO(JiaKuan Su): Property income may be item 330 or 360.
+                top.group.property = CalculateTopGroupPropertyWeights(
+                    data$GetItem(500),
+                    data$GetItem(360)
+                ),
                 # 受雇人員報酬
                 employee = CalculateWeights(data$GetItem(190))
             ),
@@ -102,7 +142,7 @@ ReadFamilyData <- function(path) {
                 # 菸草支出
                 tobacco = CalculateWeights(data$GetItem(1021)),
                 # 酒精支出
-                alcoholic = CalculateWeights(data$GetItem(1022))
+                alcohol = CalculateWeights(data$GetItem(1022))
             ),
             savings = CalculateWeights(
                 data$GetItem(400)
