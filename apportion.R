@@ -21,6 +21,7 @@ EnterpriseIncomeTax <- function(families,
         return(amount)
     } else {
         # TODO(JiaKuan Su): Handle hypothesis B.
+        stop("Not yet implemented for hypothesis B")
     }
 }
 
@@ -36,6 +37,7 @@ LandValueIncrementTax <- function(families,
         return(amount)
     } else {
         # TODO(JiaKuan Su): Handle hypothesis B.
+        stop("Not yet implemented for hypothesis B")
     }
 }
 
@@ -50,6 +52,7 @@ SalesTax <- function(families, samples.tax.totals, apportion.hypothesis) {
         return(amount)
     } else {
         # TODO(JiaKuan Su): Handle hypothesis B.
+        stop("Not yet implemented for hypothesis B")
     }
 }
 
@@ -64,6 +67,7 @@ StampTax <- function(families, samples.tax.totals, apportion.hypothesis) {
         return(amount)
     } else {
         # TODO(JiaKuan Su): Handle hypothesis B.
+        stop("Not yet implemented for hypothesis B")
     }
 }
 
@@ -95,8 +99,8 @@ HouseLandValue <- function(families, samples.tax.totals, apportion.hypothesis) {
         return(amount)
     } else {
         # TODO(JiaKuan Su): Handle hypothesis B.
+        stop("Not yet implemented for hypothesis B")
     }
-
 }
 
 # 遺產及贈與稅
@@ -118,6 +122,7 @@ DeedTax <- function(families, samples.tax.totals, apportion.hypothesis) {
         return(amount)
     } else {
         # TODO(JiaKuan Su): Handle hypothesis B.
+        stop("Not yet implemented for hypothesis B")
     }
 }
 
@@ -151,6 +156,7 @@ CommodityTax <- function(families, samples.tax.totals, apportion.hypothesis) {
         return(amount)
     } else {
         # TODO(JiaKuan Su): Handle hypothesis B.
+        stop("Not yet implemented for hypothesis B")
     }
 }
 
@@ -165,6 +171,7 @@ TariffTax <- function(families, samples.tax.totals, apportion.hypothesis) {
         return(amount)
     } else {
         # TODO(JiaKuan Su): Handle hypothesis B.
+        stop("Not yet implemented for hypothesis B")
     }
 }
 

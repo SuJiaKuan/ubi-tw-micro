@@ -110,12 +110,12 @@ ReadFamilyData <- function(path) {
                 ),
                 # 財產收入
                 # TODO(JiaKuan Su): Property income may be item 330 or 360.
-                property = CalculateWeights(data$GetItem(360)),
+                property = CalculateWeights(data$GetItem(330)),
                 # 最高所得組之財產收入
                 # TODO(JiaKuan Su): Property income may be item 330 or 360.
                 top.group.property = CalculateTopGroupPropertyWeights(
                     data$GetItem(500),
-                    data$GetItem(360)
+                    data$GetItem(330)
                 ),
                 # 受雇人員報酬
                 employee = CalculateWeights(data$GetItem(190))
@@ -146,8 +146,8 @@ ReadFamilyData <- function(path) {
             ),
             savings = CalculateWeights(
                 data$GetItem(400)
-                + data$GetItem(600)
-                + data$GetItem(1000)
+                - data$GetItem(600)
+                - data$GetItem(1000)
             )
         )
     )

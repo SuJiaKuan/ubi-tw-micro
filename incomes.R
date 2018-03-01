@@ -8,13 +8,13 @@ AdjustIncomes <- function(incomes, apportion.amounts) {
     #
     # Returns:
     #   The adjusted income of each family.
-    adjusted.incomes <- incomes -
-                        apportion.amounts$enterprise.income -
-                        apportion.amounts$sales -
-                        apportion.amounts$amusement -
-                        apportion.amounts$commodity -
-                        apportion.amounts$tariff -
-                        apportion.amounts$securities.exchange -
+    adjusted.incomes <- incomes +
+                        apportion.amounts$enterprise.income +
+                        apportion.amounts$sales +
+                        apportion.amounts$amusement +
+                        apportion.amounts$commodity +
+                        apportion.amounts$tariff +
+                        apportion.amounts$securities.exchange +
                         apportion.amounts$alcohol.tobacco
 
     return(adjusted.incomes)
