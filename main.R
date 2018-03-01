@@ -1,5 +1,6 @@
 source("reader.R")
 source("apportion.R")
+source("incomes.R")
 
 # Path to the location of file that contains the total amount of each tax.
 kTaxTotalsPath = './static/tax_totals.csv'
@@ -35,6 +36,12 @@ main <- function(year, input.path, apportion.hypothesis = "A") {
                                                    tax.totals,
                                                    household.totals,
                                                    apportion.hypothesis)
+
+    # Adjust the total incomes.
+    adjusted.incomes <- AdjustIncomes(families$total.income, apportion.amounts)
+    # Calculate after tax incomes.
+    after.tax.incomes <- CalculateAfterTaxIncomes(adjusted.incomes,
+                                                  apportion.amounts)
 }
 
 if(!interactive()) {
