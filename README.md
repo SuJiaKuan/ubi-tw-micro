@@ -33,10 +33,10 @@
 ```bash
 Rscript main.R 105 inc105.sav
 ```
-- 或是，R的互動模式下執行
+- 或是，在R的互動模式下執行
 ```R
 > source("main.R")
-> main(105, inc105.sav)
+> main(105, "inc105.sav")
 ```
 
 ## 貢獻
